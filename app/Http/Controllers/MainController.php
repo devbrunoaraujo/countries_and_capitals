@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
@@ -17,6 +18,11 @@ class MainController extends Controller
     public function showData()
     {
         return response()->json($this->app_data);
+    }
+
+    public function startGame():View
+    {
+        return view('home');
     }
 
 }
