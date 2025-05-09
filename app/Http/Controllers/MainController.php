@@ -43,7 +43,18 @@ class MainController extends Controller
         $total_questions = intval($request->input('total_questions'));
         $quiz = $this->prepareQuiz($total_questions);
 
-        dd($quiz);
+        session()->put(
+            [
+                'quiz' => $quiz,
+                'total_questions' => $total_questions,
+                'current_questions' => 1,
+                'correct_answers' => 0,
+                'wrong_answers' => 0
+            ]
+        );
+
+        return redirect()->route('game');
+
     }
 
     private function prepareQuiz($total_questions)
@@ -57,7 +68,7 @@ class MainController extends Controller
 
         foreach ($indexes as $index) {
             $question['question_number'] = $question_number++;
-            $question['country'] = $this->app_data[$index]['country'];  
+            $question['country'] = $this->app_data[$index]['country'];
             $question['capital'] = $this->app_data[$index]['capital'];
             $other_capitals = array_column($this->app_data, 'capital');
             shuffle($other_capitals);
@@ -68,6 +79,25 @@ class MainController extends Controller
         }
 
         return $questions;
+    }
+
+    public function game(): View
+    {
+        $quiz = session('quiz');
+        $total_questions = session('total_questions');
+        $current_question = session('current_question') -1;
+
+        $answers = $quiz[$current_question]['wrong_answers'];
+        $answers[] = $quiz[$current_question]['correct_answer'];
+
+        shuffle($answers);
+
+        return view('game')->with([
+            'country' => $quiz[$current_question]['country'],
+            'totalQuestions' => $total_questions,
+            'currentQuestions' => $current_question,
+            'answers' => $answers
+        ]);
     }
 
 }
