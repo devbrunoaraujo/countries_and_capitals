@@ -4,7 +4,7 @@ return [
     [
         'country' => 'Afeganistão',
         'capital' => 'Cabul'
-    ],  
+    ],
     [
         'country' => 'África do Sul',
         'capital' => 'Pretória'
